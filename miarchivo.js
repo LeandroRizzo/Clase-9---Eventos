@@ -1,33 +1,3 @@
-//Existen 3 maneras de definir eventos, esta es la mas utilizada
-/*
-function mostrar(){
-    console.log("hola");
-}
-
-let boton1 = document.getElementById("id1")
-boton1.addEventListener("click", mostrar)
-
-class Producto{
-    constructor(nombre, apellido,mail){
-        this.nombre=nombre;
-        this.apellido=apellido;
-        this.mail=mail
-    }
-}
-const Lista = []
-function crearProducto(){
-    const nombre = document.getElementById("nombre").value
-    const apellido = document.getElementById("apellido").value
-    const mail = document.getElementById("mail").value
-
-    const nuevoObjeto =new Producto(nombre,apellido,mail);
-    Lista.push(nuevoObjeto)
-    console.log(Lista);
-}
-
-const btnGuardar=document.getElementById
-*/
-//Entidades----------------------------------------------------
 class Producto {
     constructor(categoria, marca, cantidad, precio){
         this.categoria = categoria,
@@ -40,38 +10,80 @@ class Producto {
         return this.precio * 1.21;
     }
 }
-//Array de productos-----------------------------------------------------
+//Variables-----------------------------------------------------
+//Array
 const arrayProductos = []
 
-//Funciones-----------------------------------------------------
-function crearProducto(){
-    const categoria = document.getElementById("categoria").value
-    const marca = document.getElementById("marca").value
-    const cantidad = document.getElementById("cantidad").value
-    const precio = document.getElementById("precio").value
+//Selectores
+let botonGuardar = document.getElementById("guardar")
+let lista = document.getElementById("mostrarLista")
 
-    const nuevoObjeto = new Producto(categoria, marca, cantidad, precio)
-    arrayProductos.push(nuevoObjeto)
-    console.log(arrayProductos);
+//Funciones---------------------------------------------------------
+function guardarProducto(e){
+    e.preventDefault
+    let categoria = document.getElementById("categoria").value
+    let marca = document.getElementById("marca").value
+    let cantidad = document.getElementById("cantidad").value
+    let precio = document.getElementById("precio").value
+
+    
+
+    let paso1 = JSON.parse(localStorage.getItem("arrayProductos"))
+    
+    //Logica condicional
+    if(localStorage.getItem("arrayProductos") != null){
+        let nuevoObjeto = new Producto(categoria, marca, cantidad, precio)
+        paso1.push(nuevoObjeto)
+        localStorage.setItem("arrayProductos", JSON.stringify(paso1))
+    }else { 
+        localStorage.clear()
+        let nuevoObjeto = new Producto(categoria, marca, cantidad, precio)
+        arrayProductos.push(nuevoObjeto)
+        localStorage.setItem("arrayProductos", JSON.stringify(arrayProductos))
+    }
+    imprimirProductos()
 }
 
+//Variables------------------------------------------------------------
 
 
 function imprimirProductos(){
-    const mostrarLista = document.getElementById("mostrarLista")
-    arrayProductos.forEach(e => {
-        mostrarLista.innerHTML += `
-            <form>
-            <p>${e.categoria}</p>
-            <p>${e.marca}</p>
-            <p>${e.cantidad}</p>
-            <p>${e.precio}</p>
-            </form>
-            `
-    });
-}
-const botonGuardar = document.getElementById("guardar")
-botonGuardar.addEventListener("click", crearProducto)
+    let imprimir = JSON.parse(localStorage.getItem("arrayProductos"))
 
-const botonImp = document.getElementById("imp")
-botonImp.addEventListener("click", imprimirProductos)
+    if(imprimir != null){
+
+    const mostrarLista = document.getElementById("mostrarLista")
+    imprimir.forEach(e => {
+
+        let tabla = document.createElement("tr")
+
+        let th = document.createElement("th")
+
+        th.setAttribute("class", "col-1")
+        th.textContent = `${e.categoria}`
+        tabla.appendChild(th)
+
+        let th1 = document.createElement("th")
+        th1.setAttribute("class", "col-2")
+        th1.textContent = `${e.marca}`
+        tabla.appendChild(th1)
+
+        let th2 = document.createElement("th")
+        th2.setAttribute("class", "col-2")
+        th2.textContent = `${e.cantidad}`
+        tabla.appendChild(th2)
+
+        let th3 = document.createElement("th")
+        th3.setAttribute("class", "col-2")
+        th3.textContent = `${e.precio}`
+        tabla.appendChild(th3)
+
+        lista.appendChild(tabla)
+
+        });
+    }else {
+        console.log("El array estaba nulo");
+    }
+}
+//Eventos--------------------------------------------------------------
+botonGuardar.addEventListener("click", guardarProducto)
